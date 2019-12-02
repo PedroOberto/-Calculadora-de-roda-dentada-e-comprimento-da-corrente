@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html class="translated-ltr">
+<head>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<title>Calculadora de roda dentada e comprimento da corrente</title>
+	<script language="JavaScript" type="text/javascript">
+
+		function center_distance(dataform, pitch, N1, N2, nlinks) {
+			var a, b, c, d, e;
+
+			a = pitch / 8;
+			b = 2 * nlinks - N1 - N2;
+			c = b * b;
+			d = 8 / (Math.PI * Math.PI);
+			e = N1 - N2;
+			e = e * e;
+
+			dataform.distance.value = a * (b + Math.sqrt(c - d * e));
+			dataform.ratio.value = N2 / N1;
+		}
+
+		function chain_length(dataform, pitch, N1, N2, distance) {
+			var a, b, c;
+
+			a = (N1 - N2) / (2 * Math.PI);
+			a = a * a;
+
+			dataform.links.value = (2 * distance / pitch + N1 / 2 + N2 / 2 + a / (distance / pitch));
+			dataform.length.value = pitch * dataform.links.value;
+			dataform.ratio.value = N2 / N1;
+		}
+
+
+
+	</script>
+	<div>
+		<form name="chain_length_form">
+			<label>p = passo da corrente (polegadas)</label>
+			<input name="pitch" value=".625" size="6" maxlength="5" type="text" align="right">
+
+			<label>n = Número de dentes da roda dentada</label>
+			<input name="drive_teeth" size="6" maxlength="4" type="text" align="right">
+
+			<label>N = Número de dentes da segunda roda dentada</label>
+			<input name="driven_teeth" size="6" maxlength="4" type="text" align="right">
+
+			<label>c = centro a centro das duas rodas dentadas (polegadas)</label>
+			<input name="distance" size="6" maxlength="6" type="text" align="right"></td>
+
+			<input value="Calcular o número de links"
+				onclick="chain_length(this.form,form.pitch.value,form.drive_teeth.value,form.driven_teeth.value, form.distance.value)"
+				type="button">
+			<hr>
+			<label>Número de Links </label>
+			<input name="links" size="6">
+
+			<label>Comprimento da corrente (polegadas)</label>
+			<input name="length" size="6">
+
+			<label>Relação de redução de roda dentada </label>
+			<input name="ratio" size="6">
+
+			<hr>
+			<p>O passo da corrente para as correntes 520, 525 e 530 é 0,625
+				polegadas </p>
+			<p>O passo da corrente para uma corrente 630 é 0,750 polegadas O
+			</p>
+			<p>
+				O passo da corrente para 420, 425, 428 é 0,500 polegadas. </p>
+			<p>(Harley cadeia primária de linha dupla é 428)</p>
+		</form>
+	</div>
+	</body>
+
+</html>
