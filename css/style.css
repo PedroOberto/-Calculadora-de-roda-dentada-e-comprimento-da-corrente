@@ -1,5 +1,17 @@
+label {
+  /* display: block; */
+  width: 100px;
+}
 label,
-input {
-  display: block;
+input,
+select {
+  margin: 4px;
+}
+.required {
+  color: red;
+}
+form div {
+  display: flex;
+  align-items: center;
   margin: 8px;
 }

@@ -10,112 +10,94 @@
 
 <body>
 	<script language="JavaScript" type="text/javascript">
-		function center_distance(dataform, pitch, N1, N2, nlinks) {
 
-      /*
-          Formula found on internet in a spreadsheet by Matthew J. Adams
-         (B1/8) * (2*B4-B2-B3 + SQRT((2*B4-B2-B3)^2-(8/3.14159^2)*((B2-B3)^2)) )
-         B1 = chain pitch
-	 B2 = Sprocket 1 teeth
-	 B3 = Sprocket 2 teeth
-	 B4 = Links 
-	 
-	 Rewritten below in Javascript
-	 */
-
-			var a, b, c, d, e;
-
-			a = pitch / 8;
-			b = 2 * nlinks - N1 - N2;
-			c = b * b;
-			d = 8 / (Math.PI * Math.PI);
-			e = N1 - N2;
-			e = e * e;
-
-			dataform.distance.value = a * (b + Math.sqrt(c - d * e));
-			dataform.ratio.value = N2 / N1;
-
+		function AdicionaCorrente() {
+			var index = document.form.corrente.selectedIndex;
+			document.form.passo.value = document.form.corrente[index].value;
 		}
 
-		function chain_length(dataform, pitch, N1, N2, distance) {
 
-			/*  
-				 Formula found on internet in a spreadsheet by Matthew J. Adams
-				 (2*E4/E1+E2/2+E3/2+((E2-E3)/(2*3.14159))^2/(E4/E1))  
-				 
-				 E1 = chain pitch
-			 E2 = sprocket 1 teeth
-			 E3 = sprocket 2 teeth
-			 E4 = Center distance
-				  
-			 Rewritten below in Javascript
-			 */
 
-			var a, b, c;
+		function calcular(dataform, passo, eng1, eng2, centroAcentro) {
 
-			a = (N1 - N2) / (2 * Math.PI);
-			a = a * a;
+			let comprimentoTotal = (parseFloat(eng1) + parseFloat(eng2)) / 2 * parseFloat(passo) + parseFloat(centroAcentro) + parseFloat(centroAcentro);
 
-			dataform.links.value = (2 * distance / pitch + N1 / 2 + N2 / 2 + a / (distance / pitch));
-			dataform.length.value = pitch * dataform.links.value;
-			dataform.ratio.value = N2 / N1;
+			let nElos = Math.round(comprimentoTotal / parseFloat(passo));
+
+			let rVelocidade = parseFloat(eng2) / parseFloat(eng1);
+
+			dataform.comprimentoTotal.value = comprimentoTotal;
+
+			dataform.nElos.value = nElos;
+
+			dataform.rVelocidade.value = rVelocidade;
 
 		}
 
 	</script>
-	<form name="distance_form">
-		<h2>Distância do centro da roda dentada</h2>
-		<label>Passo da corrente</label>
-		<input type="text" name="pitch" value=".25" size="5" align="right" maxlength="5">
+	<form name="form">
+<h2>Preencha os Campos com <span class="required">* </span></h2>
+		<div>
+				<label><span class="required">* </span>Corrente</label>
+				<select name="corrente" id="corrente" onchange="AdicionaCorrente(), calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+					<option>Seleciona uma Corrente</option>
+					<option value="6.35">25</option>
+					<option value="9.525">35</option>
+					<option value="12.7">40</option>
+					<option value="15.875">50</option>
+					<option value="19.05">60</option>
+					<option value="25.4">80</option>
+					<option value="31.75">100</option>
+					<option value="38.1">120</option>
+					<option value="44.45">140</option>
+					<option value="50.8">160</option>
+					<option value="63.5">200</option>
+					<option value="76.2">240</option>
+				</select>
+				<span>ASA</span>
+		</div>
 
-		<label style="vertical-align: inherit;">Dentes da roda dentada</label>
-		<input type="text" name="drive_teeth" size="4" align="right" maxlength="4">
+		<div>
+			<label>Passo da corrente</label>
+			<input type="text" name="passo">
+			<span>mm</span>
+		</div>
 
-		<label style="vertical-align: inherit;">Dentes de roda dentada acionada </label>
-		<input type="text" name="driven_teeth" size="4" align="right" maxlength="4">
+		<div>
+				<label><span class="required">* </span>Engrenagem Acionadora</label>
+				<input type="text" name="eng1" onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+				<span>dentes</span>
+		</div>
 
-		<label>Ligações em cadeia </label>
-		<input type="text" name="links" size="4" align="right" maxlength="4">
+		<div>
+				<label><span class="required">* </span>Engrenagem Movida</label>
+				<input type="text" name="eng2" onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+				<span>dentes</span>
+		</div>
 
-		<input type="button" value="CALCULAR"
-			onclick="center_distance(this.form,form.pitch.value,form.drive_teeth.value,form.driven_teeth.value, form.links.value)">
+		<div>
+				<label><span class="required">* </span> Distância entre centros</label>
+				<input type="text" name="centroAcentro" onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+				<span>mm</span>
+		</div>
 
-		<label>Distância do centro</label>
-		<input name="distance" size="6" readonly="">
+		<!-- <input type="button" value="CALCULAR"
+			onclick="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)"> -->
 
-		<label>Taxa de redução</label>
-		<input name="ratio" size="6" readonly="">
-	</form>
+		<div>
+				<label>Numero de Elos</label>
+				<input name="nElos">
+		</div>
 
-	<hr>
+		<div>
+				<label>Comprimento</label>
+				<input name="comprimentoTotal">
+		</div>
 
-	<form name="chain_length_form">
-		<h2>Comprimento da corrente</h2>
-		<label>Passo da corrente </label>
-		<input type="text" name="pitch" value=".25" size="5" align="right" maxlength="5">
-
-
-		<label>Dentes da roda dentada </label>
-		<input type="text" name="drive_teeth" size="4" align="right" maxlength="4">
-
-		<label>Dentes de roda dentada acionada </label>
-		<input type="text" name="driven_teeth" size="4" align="right" maxlength="4">
-
-		<label>Distância do centro </label>
-		<input type="text" name="distance" size="6" align="right" maxlength="6">
-
-
-		<input type="button" value="CALCULAR"
-			onclick="chain_length(this.form,form.pitch.value,form.drive_teeth.value,form.driven_teeth.value, form.distance.value)">
-
-		<label>Ligações </label>
-		<input name="links" size="5" readonly="">
-
-		<label>Comprimento </label>
-		<input name="length" size="6" readonly="">
-
-		<label>Taxa de redução </label>
-		<input name="ratio" size="6" readonly="">
+		<div>
+				<label>Relação de Velocidade</label>
+				<input name="rVelocidade">
+		</div>
 
 	</form>
 </body>
