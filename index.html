@@ -1,12 +1,28 @@
 <!DOCTYPE html>
-<html class="translated-ltr">
-<head>
-		<meta name="viewport" content="width=device-width,initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
-	<title>Calculadora de roda dentada e comprimento da corrente</title>
-	<script language="JavaScript" type="text/javascript">
+<html>
 
+<head>
+	<meta charset="utf-8">
+	<title>Calculadoras de distância do centro da roda dentada e comprimento da corrente</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<link type="text/css" rel="stylesheet" charset="UTF-8" href="css/style.css">
+</head>
+
+<body>
+	<script language="JavaScript" type="text/javascript">
 		function center_distance(dataform, pitch, N1, N2, nlinks) {
+
+      /*
+          Formula found on internet in a spreadsheet by Matthew J. Adams
+         (B1/8) * (2*B4-B2-B3 + SQRT((2*B4-B2-B3)^2-(8/3.14159^2)*((B2-B3)^2)) )
+         B1 = chain pitch
+	 B2 = Sprocket 1 teeth
+	 B3 = Sprocket 2 teeth
+	 B4 = Links 
+	 
+	 Rewritten below in Javascript
+	 */
+
 			var a, b, c, d, e;
 
 			a = pitch / 8;
@@ -18,9 +34,23 @@
 
 			dataform.distance.value = a * (b + Math.sqrt(c - d * e));
 			dataform.ratio.value = N2 / N1;
+
 		}
 
 		function chain_length(dataform, pitch, N1, N2, distance) {
+
+			/*  
+				 Formula found on internet in a spreadsheet by Matthew J. Adams
+				 (2*E4/E1+E2/2+E3/2+((E2-E3)/(2*3.14159))^2/(E4/E1))  
+				 
+				 E1 = chain pitch
+			 E2 = sprocket 1 teeth
+			 E3 = sprocket 2 teeth
+			 E4 = Center distance
+				  
+			 Rewritten below in Javascript
+			 */
+
 			var a, b, c;
 
 			a = (N1 - N2) / (2 * Math.PI);
@@ -29,48 +59,65 @@
 			dataform.links.value = (2 * distance / pitch + N1 / 2 + N2 / 2 + a / (distance / pitch));
 			dataform.length.value = pitch * dataform.links.value;
 			dataform.ratio.value = N2 / N1;
+
 		}
 
-
-
 	</script>
-	<div>
-		<form name="chain_length_form">
-			<label>p = passo da corrente (polegadas)</label>
-			<input name="pitch" value=".625" size="6" maxlength="5" type="text" align="right">
+	<form name="distance_form">
+		<h2>Distância do centro da roda dentada</h2>
+		<label>Passo da corrente</label>
+		<input type="text" name="pitch" value=".25" size="5" align="right" maxlength="5">
 
-			<label>n = Número de dentes da roda dentada</label>
-			<input name="drive_teeth" size="6" maxlength="4" type="text" align="right">
+		<label style="vertical-align: inherit;">Dentes da roda dentada</label>
+		<input type="text" name="drive_teeth" size="4" align="right" maxlength="4">
 
-			<label>N = Número de dentes da segunda roda dentada</label>
-			<input name="driven_teeth" size="6" maxlength="4" type="text" align="right">
+		<label style="vertical-align: inherit;">Dentes de roda dentada acionada </label>
+		<input type="text" name="driven_teeth" size="4" align="right" maxlength="4">
 
-			<label>c = centro a centro das duas rodas dentadas (polegadas)</label>
-			<input name="distance" size="6" maxlength="6" type="text" align="right"></td>
+		<label>Ligações em cadeia </label>
+		<input type="text" name="links" size="4" align="right" maxlength="4">
 
-			<input value="Calcular o número de links"
-				onclick="chain_length(this.form,form.pitch.value,form.drive_teeth.value,form.driven_teeth.value, form.distance.value)"
-				type="button">
-			<hr>
-			<label>Número de Links </label>
-			<input name="links" size="6">
+		<input type="button" value="CALCULAR"
+			onclick="center_distance(this.form,form.pitch.value,form.drive_teeth.value,form.driven_teeth.value, form.links.value)">
 
-			<!-- <label>Comprimento da corrente (polegadas)</label>
-			<input name="length" size="6"> -->
+		<label>Distância do centro</label>
+		<input name="distance" size="6" readonly="">
 
-			<!-- <label>Relação de redução de roda dentada </label>
-			<input name="ratio" size="6"> -->
-<!-- 
-			<hr>
-			<p>O passo da corrente para as correntes 520, 525 e 530 é 0,625
-				polegadas </p>
-			<p>O passo da corrente para uma corrente 630 é 0,750 polegadas
-			</p>
-			<p>
-				O passo da corrente para 420, 425, 428 é 0,500 polegadas. </p>
-			<p>(Harley cadeia primária de linha dupla é 428)</p> -->
-		</form>
-	</div>
-	</body>
+		<label>Taxa de redução</label>
+		<input name="ratio" size="6" readonly="">
+	</form>
+
+	<hr>
+
+	<form name="chain_length_form">
+		<h2>Comprimento da corrente</h2>
+		<label>Passo da corrente </label>
+		<input type="text" name="pitch" value=".25" size="5" align="right" maxlength="5">
+
+
+		<label>Dentes da roda dentada </label>
+		<input type="text" name="drive_teeth" size="4" align="right" maxlength="4">
+
+		<label>Dentes de roda dentada acionada </label>
+		<input type="text" name="driven_teeth" size="4" align="right" maxlength="4">
+
+		<label>Distância do centro </label>
+		<input type="text" name="distance" size="6" align="right" maxlength="6">
+
+
+		<input type="button" value="CALCULAR"
+			onclick="chain_length(this.form,form.pitch.value,form.drive_teeth.value,form.driven_teeth.value, form.distance.value)">
+
+		<label>Ligações </label>
+		<input name="links" size="5" readonly="">
+
+		<label>Comprimento </label>
+		<input name="length" size="6" readonly="">
+
+		<label>Taxa de redução </label>
+		<input name="ratio" size="6" readonly="">
+
+	</form>
+</body>
 
 </html>
