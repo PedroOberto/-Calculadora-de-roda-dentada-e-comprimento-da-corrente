@@ -12,11 +12,9 @@
 	<script language="JavaScript" type="text/javascript">
 
 		function AdicionaCorrente() {
-			var index = document.form.corrente.selectedIndex;
+			let index = document.form.corrente.selectedIndex;
 			document.form.passo.value = document.form.corrente[index].value;
 		}
-
-
 
 		function calcular(dataform, passo, eng1, eng2, centroAcentro) {
 
@@ -24,37 +22,42 @@
 
 			let nElos = Math.round(comprimentoTotal / parseFloat(passo));
 
+			if (parseFloat(centroAcentro) > parseFloat(passo) * 40) {
+				dataform.comprimentoTotal.value = comprimentoTotal;
+				dataform.nElos.value = nElos;
+				document.getElementById("errorCentroAcentro").innerText = "";
+			} else {
+				document.getElementById("errorCentroAcentro").innerText = " " + " Por favor adicione uma distancia maior que 40 x o passo";
+				console.log("menor que 40 x 0 passo");
+				dataform.comprimentoTotal.value = "";
+				dataform.nElos.value = "";
+			}
 			let rVelocidade = parseFloat(eng2) / parseFloat(eng1);
-
-			dataform.comprimentoTotal.value = comprimentoTotal;
-
-			dataform.nElos.value = nElos;
-
 			dataform.rVelocidade.value = rVelocidade;
-
 		}
 
 	</script>
 	<form name="form">
-<h2>Preencha os Campos com <span class="required">* </span></h2>
+		<h2>Preencha os Campos com <span class="required">* </span></h2>
 		<div>
-				<label><span class="required">* </span>Corrente</label>
-				<select name="corrente" id="corrente" onchange="AdicionaCorrente(), calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
-					<option>Seleciona uma Corrente</option>
-					<option value="6.35">25</option>
-					<option value="9.525">35</option>
-					<option value="12.7">40</option>
-					<option value="15.875">50</option>
-					<option value="19.05">60</option>
-					<option value="25.4">80</option>
-					<option value="31.75">100</option>
-					<option value="38.1">120</option>
-					<option value="44.45">140</option>
-					<option value="50.8">160</option>
-					<option value="63.5">200</option>
-					<option value="76.2">240</option>
-				</select>
-				<span>ASA</span>
+			<label><span class="required">* </span>Corrente</label>
+			<select name="corrente" id="corrente"
+				onchange="AdicionaCorrente(), calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+				<option>Seleciona uma Corrente</option>
+				<option value="6.35">25</option>
+				<option value="9.525">35</option>
+				<option value="12.7">40</option>
+				<option value="15.875">50</option>
+				<option value="19.05">60</option>
+				<option value="25.4">80</option>
+				<option value="31.75">100</option>
+				<option value="38.1">120</option>
+				<option value="44.45">140</option>
+				<option value="50.8">160</option>
+				<option value="63.5">200</option>
+				<option value="76.2">240</option>
+			</select>
+			<span>ASA</span>
 		</div>
 
 		<div>
@@ -64,39 +67,42 @@
 		</div>
 
 		<div>
-				<label><span class="required">* </span>Engrenagem Acionadora</label>
-				<input type="text" name="eng1" onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
-				<span>dentes</span>
+			<label><span class="required">* </span>Engrenagem Acionadora</label>
+			<input type="text" name="eng1" value="0"
+				onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+			<span>dentes</span>
 		</div>
 
 		<div>
-				<label><span class="required">* </span>Engrenagem Movida</label>
-				<input type="text" name="eng2" onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
-				<span>dentes</span>
+			<label><span class="required">* </span>Engrenagem Movida</label>
+			<input type="text" name="eng2" value="0"
+				onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+			<span>dentes</span>
 		</div>
 
 		<div>
-				<label><span class="required">* </span> Distância entre centros</label>
-				<input type="text" name="centroAcentro" onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
-				<span>mm</span>
+			<label><span class="required">* </span> Distância entre centros</label>
+			<input type="text" name="centroAcentro" value="0"
+				onKeyUp="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)">
+			<span>mm</span><span id="errorCentroAcentro" class="required"></span>
 		</div>
-
+		<span id="error"></span>
 		<!-- <input type="button" value="CALCULAR"
 			onclick="calcular(this.form,form.passo.value,form.eng1.value,form.eng2.value, form.centroAcentro.value)"> -->
 
 		<div>
-				<label>Numero de Elos</label>
-				<input name="nElos">
+			<label>Numero de Elos</label>
+			<input name="nElos">
 		</div>
 
 		<div>
-				<label>Comprimento</label>
-				<input name="comprimentoTotal">
+			<label>Comprimento</label>
+			<input name="comprimentoTotal">
 		</div>
 
 		<div>
-				<label>Relação de Velocidade</label>
-				<input name="rVelocidade">
+			<label>Relação de Velocidade</label>
+			<input name="rVelocidade">
 		</div>
 
 	</form>
